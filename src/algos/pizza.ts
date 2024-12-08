@@ -30,13 +30,14 @@ export const handler = async (ctx: AppContext, params: QueryParams) => {
         return Math.random() - 0.5 // Regular random for same type
       })
       ?.filter((post) => {
-        // const isLiked = likedPosts.some(
-        //   (likedPost) => likedPost.uri === post.uri,
-        // )
-        return post.text.toLowerCase().includes('pizza')
-        //   &&
-        //   (isLiked /* @ts-ignore */ ||
-        //     (post.altText?.toLowerCase()?.includes('pizza') ?? false))
+        const isLiked = likedPosts.some(
+          (likedPost) => likedPost.uri === post.uri,
+        )
+        return (
+          post.text.toLowerCase().includes('pizza') &&
+          (isLiked /* @ts-ignore */ ||
+            (post.altText?.toLowerCase()?.includes('pizza') ?? false))
+        )
       })
       .slice(0, params.limit)
 
@@ -45,6 +46,7 @@ export const handler = async (ctx: AppContext, params: QueryParams) => {
     if (last) {
       cursor = new Date(last.indexedAt).getTime().toString(10)
     }
+
     const feed = mergedPosts.map((post) => ({
       post: post.uri,
     }))

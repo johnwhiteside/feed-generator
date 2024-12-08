@@ -13,8 +13,13 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
     const postsToDelete = ops.posts.deletes.map((del) => del.uri)
     const postsToCreate = ops.posts.creates
       .filter((create) => {
+        /* @ts-ignore */
+        const postWithImageAlt = create.record.embed?.images?.find(
+          (image) => image.alt,
+        )
         return (
-          create.record.text.toLowerCase().includes('pizza') &&
+          (create.record.text.toLowerCase().includes('pizza') ||
+            postWithImageAlt?.alt.toLowerCase().includes('pizza')) &&
           create.record.langs?.includes('en')
         )
       })
