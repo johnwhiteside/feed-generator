@@ -14,22 +14,23 @@ export class FirehoseSubscription extends FirehoseSubscriptionBase {
     const postsToCreate = ops.posts.creates
       .filter((create) => {
         return (
-          (create.record.text.toLowerCase().includes('pizza') ||
-            create.record.altText
-              ?.toString()
-              .toLowerCase()
-              .includes('pizza')) &&
+          create.record.text.toLowerCase().includes('pizza') &&
           create.record.langs?.includes('en')
         )
       })
       .map((create) => {
-        return {
+        /* @ts-ignore */
+        const postWithImageAlt = create.record.embed?.images?.find(
+          (image) => image.alt,
+        )
+        const post = {
           uri: create.uri,
           cid: create.cid,
           indexedAt: new Date().toISOString(),
           text: create.record.text,
-          altText: create.record.altText,
+          altText: postWithImageAlt?.alt ?? null,
         }
+        return post
       })
 
     if (postsToDelete.length > 0) {

@@ -9,7 +9,6 @@ export type Post = {
   indexedAt: string
   text: string
   altText: unknown | null
-  embed: unknown | null
 }
 
 export type SubState = {
