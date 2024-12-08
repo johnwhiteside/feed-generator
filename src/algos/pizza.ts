@@ -34,7 +34,11 @@ export const handler = async (ctx: AppContext, params: QueryParams) => {
           (likedPost) => likedPost.uri === post.uri,
         )
         return (
-          isLiked /* @ts-ignore */ ||
+          (isLiked &&
+            /* @ts-ignore */
+            (post.altText?.toLowerCase()?.includes('pizza') ||
+              post.text.toLowerCase().includes('pizza'))) ||
+          /* @ts-ignore */
           post.altText?.toLowerCase()?.includes('pizza')
         )
       })
